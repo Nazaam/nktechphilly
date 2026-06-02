@@ -990,6 +990,97 @@
     <div class="section-title">Let's talk about your network</div>
     <p class="section-sub">Reach out for a free 15-minute consultation. No pressure, no commitment — just an honest conversation about what your business needs.</p>
   </div>
+ <div class="contact-methods"
+  <section id="assessment-form">
+  <h2>Book Your Free Network & Security Assessment</h2>
+  <p class="subhead">15 minutes. No obligation. We'll identify your biggest IT risks and report back — completely on the house.</p>
+
+  <form
+    name="assessment"
+    method="POST"
+    action="https://formspree.io/f/YOUR_FORM_ID"
+    onsubmit="handleFormSubmit(event)"
+  >
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Your Name *</label>
+        <input type="text" id="name" name="name" placeholder="Jane Smith" required>
+      </div>
+      <div class="form-group">
+        <label for="business">Business Name *</label>
+        <input type="text" id="business" name="business" placeholder="Smith Dental Associates" required>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" name="phone" placeholder="(215) 555-0100" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" name="email" placeholder="jane@smithdental.com" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="business_type">Type of Business *</label>
+      <select id="business_type" name="business_type" required>
+        <option value="" disabled selected>Select your industry</option>
+        <option value="Dental Office">Dental Office</option>
+        <option value="Medical / Healthcare">Medical / Healthcare</option>
+        <option value="Law Firm">Law Firm</option>
+        <option value="Accounting / CPA Firm">Accounting / CPA Firm</option>
+        <option value="Financial Services">Financial Services</option>
+        <option value="Other Professional Services">Other Professional Services</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="issue">What's your biggest IT headache right now?</label>
+      <textarea id="issue" name="issue" placeholder="e.g. Wi-Fi keeps dropping, printers won't connect, concerned about security..."></textarea>
+    </div>
+
+    <!-- Hidden field to tag Google Ads conversions -->
+    <input type="hidden" name="_subject" value="New Assessment Request — NK Tech Solutions">
+
+    <button type="submit">Request My Free Assessment →</button>
+
+    <div class="success-msg" id="success-msg">
+      ✓ Request received! Nazaam will be in touch within 24 hours to schedule your free assessment.
+    </div>
+
+    <p class="privacy">Your information is never shared or sold. This is a direct inquiry to NK Tech Solutions.</p>
+  </form>
+</section>
+
+<script>
+function handleFormSubmit(e) {
+  e.preventDefault();
+  var form = e.target;
+  var data = new FormData(form);
+
+  fetch(form.action, {
+    method: 'POST',
+    body: data,
+    headers: { 'Accept': 'application/json' }
+  }).then(function(response) {
+    if (response.ok) {
+      form.reset();
+      document.getElementById('success-msg').style.display = 'block';
+      // Fire Google Ads conversion
+      if (typeof gtag === 'function') {
+        gtag('event', 'conversion', {
+          'send_to': 'AW-18205036885'
+        });
+      }
+    }
+  }).catch(function() {
+    alert('Something went wrong. Please call us directly at (267) 225-8237.');
+  });
+}
+</script>
   <div class="contact-methods">
     <div class="contact-method">
       <div class="contact-method-icon">📱</div>
@@ -1013,6 +1104,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 </div>
 

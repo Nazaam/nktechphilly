@@ -671,6 +671,101 @@
     color: rgba(255,255,255,0.3);
   }
 
+/* ── ASSESSMENT FORM ── */
+#assessment-form {
+  background: #f9f9f9;
+  border: 2px solid #0D1F3C;
+  padding: 40px 44px;
+  max-width: 620px;
+  margin: 60px auto;
+  font-family: 'DM Sans', Arial, sans-serif;
+}
+#assessment-form h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0D1F3C;
+  margin-bottom: 6px;
+}
+#assessment-form p.subhead {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+#assessment-form .form-group {
+  margin-bottom: 18px;
+}
+#assessment-form label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #333;
+  margin-bottom: 6px;
+}
+#assessment-form input,
+#assessment-form select,
+#assessment-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #ccc;
+  background: #fff;
+  font-size: 14px;
+  color: #111;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+#assessment-form input:focus,
+#assessment-form select:focus,
+#assessment-form textarea:focus {
+  border-color: #0D1F3C;
+}
+#assessment-form textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+#assessment-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+#assessment-form button[type="submit"] {
+  width: 100%;
+  padding: 16px;
+  background: #0D1F3C;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+#assessment-form button[type="submit"]:hover {
+  background: #1a3a6e;
+}
+#assessment-form .success-msg {
+  display: none;
+  background: #0D1F3C;
+  color: #fff;
+  padding: 20px 24px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+#assessment-form .privacy {
+  font-size: 10px;
+  color: #999;
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
   /* RESPONSIVE */
   @media (max-width: 768px) {
     .hero { grid-template-columns: 1fr; gap: 40px; padding: 60px 5% 50px; }

@@ -1132,8 +1132,17 @@ function handleFormSubmit(e) {
       document.getElementById('success-msg').style.display = 'block';
       // Fire Google Ads conversion
       if (typeof gtag === 'function') {
+        // Free Assessment Request conversion
         gtag('event', 'conversion', {
-          'send_to': 'AW-18205036885'
+          'send_to': 'AW-18205036885/Zbx3CNyKobgcENWi6-hD',
+          'value': 50.0,
+          'currency': 'USD'
+        });
+        // Sign-up conversion
+        gtag('event', 'conversion', {
+          'send_to': 'AW-18205036885/kAVyCNmKobgcENWi6-hD',
+          'value': 1.0,
+          'currency': 'USD'
         });
       }
     }

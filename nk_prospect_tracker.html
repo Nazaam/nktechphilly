@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NK Tech Solutions — Prospect Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0D1F3C;--gold:#C8962A;--cream:#F7F3EE;
+  --muted:#6B7A8D;--border:rgba(13,31,60,0.12);
+  --green:#2E7D52;--red:#B02A2A;
+}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--cream);color:var(--navy);font-size:13px;min-height:100vh;}
+
+/* HEADER */
+#hd{background:var(--navy);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+#hd-brand{font-size:17px;font-weight:700;color:#fff;}
+#hd-brand span{color:var(--gold);}
+#hd-stats{display:flex;gap:14px;}
+.sn{font-size:18px;font-weight:700;color:#fff;display:block;}
+.sl{font-size:9px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;display:block;}
+
+/* QUICK ADD */
+#qa{background:#162d52;padding:12px 16px;border-bottom:3px solid var(--gold);}
+#qa-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+#qa-row{display:flex;gap:6px;flex-wrap:wrap;}
+.qi{flex:1;min-width:100px;padding:8px 10px;border:none;background:rgba(255,255,255,0.12);color:#fff;font-size:13px;font-family:Arial,sans-serif;}
+.qi::placeholder{color:rgba(255,255,255,0.3);}
+.qi:focus{outline:none;background:rgba(255,255,255,0.2);}
+.qs{padding:8px;border:none;background:rgba(255,255,255,0.12);color:#fff;font-size:12px;min-width:90px;font-family:Arial,sans-serif;}
+.qs option{background:#0D1F3C;}
+#qa-btn{background:var(--gold);color:var(--navy);border:none;padding:8px 18px;font-weight:700;cursor:pointer;font-size:13px;font-family:Arial,sans-serif;}
+#qa-hint{font-size:10px;color:rgba(255,255,255,0.3);margin-top:6px;}
+
+/* TABS */
+#tabs{background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;}
+.tab{padding:10px 14px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:Arial,sans-serif;}
+.tab.on{color:var(--navy);border-bottom-color:var(--gold);}
+
+/* MAIN */
+#main{padding:14px 16px;max-width:900px;margin:0 auto;}
+.sec{display:none;}.sec.on{display:block;}
+
+/* CARDS */
+.card{background:#fff;border:1px solid var(--border);padding:14px;margin-bottom:10px;}
+.ch{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.cs{font-size:12px;color:var(--muted);margin-bottom:10px;}
+
+/* SEARCH TERMS */
+#tgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:10px;}
+.trow{background:var(--cream);border:1px solid var(--border);padding:8px 10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+.trow:hover{border-color:var(--gold);background:#FBF0DC;}
+.tn{font-size:12px;font-weight:700;color:var(--navy);}
+.ta{font-size:10px;color:var(--muted);}
+.tcbtn{font-size:10px;color:var(--gold);background:none;border:none;cursor:pointer;font-weight:700;padding:2px 6px;font-family:Arial,sans-serif;}
+#mapbtn{display:inline-block;background:var(--navy);color:#fff;padding:8px 16px;font-size:12px;font-weight:700;text-decoration:none;margin-top:10px;cursor:pointer;border:none;font-family:Arial,sans-serif;}
+.tip{background:#FBF0DC;border-left:3px solid var(--gold);padding:9px 12px;font-size:12px;color:#633806;line-height:1.6;margin-top:8px;}
+
+/* PASTE */
+#pasteArea{width:100%;font-size:12px;font-family:monospace;padding:9px;border:1px solid var(--border);background:var(--cream);height:90px;resize:vertical;line-height:1.6;}
+#pasteArea:focus{outline:none;border-color:var(--gold);}
+#parseOut{margin-top:10px;}
+.prc{background:var(--cream);border:1px solid var(--border);padding:10px;margin-bottom:6px;}
+.prn{font-weight:700;font-size:13px;margin-bottom:2px;}
+.prp{font-size:11px;color:var(--muted);}
+
+/* FORM */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.fc{display:flex;flex-direction:column;gap:3px;}
+.fc.full{grid-column:1/-1;}
+.fl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);}
+.fi,.fsel,.fta{width:100%;padding:7px 9px;border:1px solid var(--border);background:var(--cream);font-size:13px;font-family:Arial,sans-serif;}
+.fi:focus,.fta:focus{outline:none;border-color:var(--gold);background:#fff;}
+.fta{height:60px;resize:vertical;}
+.fbtns{display:flex;gap:7px;justify-content:flex-end;margin-top:4px;}
+
+/* BUTTONS */
+.btnp{background:var(--navy);color:#fff;border:none;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;}
+.btns{background:none;border:1px solid var(--border);color:var(--navy);padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;}
+.btng{background:var(--green);color:#fff;border:none;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;}
+.btnsm{padding:5px 11px;font-size:11px;}
+
+/* LIST */
+#ltb{display:flex;gap:7px;margin-bottom:9px;flex-wrap:wrap;}
+#ltb input,#ltb select{font-size:12px;padding:7px 9px;border:1px solid var(--border);background:#fff;flex:1;min-width:100px;font-family:Arial,sans-serif;}
+#sbar{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;align-items:center;}
+#sbar-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.sbtn{font-size:11px;padding:4px 9px;border:1px solid var(--border);background:#fff;cursor:pointer;font-family:Arial,sans-serif;}
+.sbtn.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+#exbar{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.exbtn{font-size:11px;padding:5px 12px;border:1px solid var(--border);background:#fff;cursor:pointer;font-family:monospace;letter-spacing:0.5px;}
+.exbtn:hover{background:var(--navy);color:#fff;}
+
+/* PROSPECT CARDS */
+.pc{background:#fff;border:1px solid var(--border);margin-bottom:7px;}
+.pch{padding:10px 12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;cursor:pointer;}
+.pcl{flex:1;min-width:0;}
+.pcn{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;}
+.pcm{font-size:11px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;}
+.pcr{display:flex;gap:5px;align-items:center;flex-shrink:0;}
+.bdg{font-size:9px;padding:2px 7px;font-weight:700;white-space:nowrap;}
+.bc{background:#E8EAF0;color:#4A5568;}
+.bk{background:#E6F1FB;color:#0C447C;}
+.bt{background:#FBF0DC;color:#633806;}
+.bp2{background:#EDE9FE;color:#4C1D95;}
+.bf{background:#FEF3C7;color:#92400E;}
+.bx{background:#EAF3DE;color:#27500A;}
+.bl{background:#FCEBEB;color:#791F1F;}
+.pcbtn{background:none;border:none;cursor:pointer;color:var(--muted);padding:3px 4px;font-size:13px;}
+.pcbody{padding:0 12px 12px;border-top:1px solid var(--border);display:none;}
+.pcbody.on{display:block;}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.dlbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:2px;}
+.dval{font-size:12px;color:var(--navy);}
+.painbox{background:var(--cream);border-left:3px solid var(--gold);padding:8px 10px;margin-top:8px;font-size:12px;font-style:italic;line-height:1.5;}
+.painlbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--gold);display:block;margin-bottom:2px;font-style:normal;}
+.strow{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap;}
+.stbtn{font-size:10px;padding:3px 8px;border:1px solid var(--border);background:none;cursor:pointer;font-family:Arial,sans-serif;}
+.stbtn.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+.furow{display:flex;gap:7px;align-items:center;margin-top:8px;font-size:11px;color:var(--muted);}
+.furow input{font-size:12px;padding:4px 7px;border:1px solid var(--border);background:var(--cream);font-family:Arial,sans-serif;}
+.empty{text-align:center;padding:32px;color:var(--muted);}
+
+/* PIPELINE */
+#pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.pcol{background:#fff;border:1px solid var(--border);padding:10px;}
+.pcolh{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:2px;display:flex;justify-content:space-between;}
+.pcoln{font-size:22px;font-weight:700;color:var(--navy);}
+.pcolv{font-size:10px;color:var(--muted);}
+.pbar{height:3px;background:var(--border);margin-top:5px;}
+.pbarf{height:3px;background:var(--gold);}
+
+/* SCRIPT */
+.ssh{background:var(--navy);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:0;}
+.ssg{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--gold);}
+.sst{font-size:13px;font-weight:700;color:#fff;}
+.stime{font-size:11px;color:rgba(255,255,255,0.35);}
+.ssb{background:#fff;border:1px solid var(--border);border-top:none;padding:12px 14px;margin-bottom:10px;}
+.ssq{margin-bottom:10px;}
+.qlbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:3px;}
+.quote{background:var(--cream);border-left:3px solid var(--gold);padding:8px 11px;font-size:12px;font-style:italic;line-height:1.6;}
+.qnote{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
+.obrow{border:1px solid var(--border);margin-bottom:5px;}
+.obq{padding:8px 11px;background:var(--cream);font-size:12px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;user-select:none;}
+.oba{padding:8px 11px;font-size:12px;font-style:italic;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);display:none;}
+.oba.on{display:block;}
+
+@media(max-width:500px){
+  #tgrid,.fg,.dg,#pgrid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="hd">
+  <div id="hd-brand">NK<span>.</span>Tech Solutions</div>
+  <div id="hd-stats">
+    <div><span class="sn" id="s1">0</span><span class="sl">Prospects</span></div>
+    <div><span class="sn" id="s2">0</span><span class="sl">Active</span></div>
+    <div><span class="sn" id="s3">0</span><span class="sl">Clients</span></div>
+    <div><span class="sn" id="s4">$0</span><span class="sl">MRR</span></div>
+  </div>
+</div>
+
+<div id="qa">
+  <div id="qa-lbl">&#x26A1; Quick Add &mdash; under 5 seconds from Google Maps</div>
+  <div id="qa-row">
+    <input class="qi" id="qn" placeholder="Business name *">
+    <input class="qi" id="qp" placeholder="Phone number">
+    <select class="qs" id="qt">
+      <option value="">Type...</option>
+      <option>Medical/Dental</option>
+      <option>Law Firm</option>
+      <option>Real Estate</option>
+      <option>Pharmacy</option>
+      <option>Accounting</option>
+      <option>Insurance</option>
+      <option>Retail/POS</option>
+      <option>Chiro/Therapy</option>
+      <option>Other</option>
+    </select>
+    <select class="qs" id="qpl">
+      <option value="">Plan...</option>
+      <option value="249">Basic $249</option>
+      <option value="449">Standard $449</option>
+      <option value="799">Premium $799</option>
+    </select>
+    <button id="qa-btn">ADD &#x2192;</button>
+  </div>
+  <div id="qa-hint">Tab between fields &middot; Enter to add &middot; Cursor returns to name field automatically</div>
+</div>
+
+<div id="tabs">
+  <button class="tab on" data-tab="find">&#x1F4CD; Find</button>
+  <button class="tab" data-tab="qualify">&#x2713; Qualify</button>
+  <button class="tab" data-tab="paste">&#x1F4CB; Paste &amp; Parse</button>
+  <button class="tab" data-tab="form">&#x2795; Full Form</button>
+  <button class="tab" data-tab="list">&#x1F4CB; List</button>
+  <button class="tab" data-tab="pipe">&#x1F4CA; Pipeline</button>
+  <button class="tab" data-tab="script">&#x1F4AC; Script</button>
+</div>
+
+<div id="main">
+
+<!-- FIND -->
+<div class="sec on" id="sec-find">
+  <div class="card">
+    <div class="ch">Google Maps Search Terms</div>
+    <div class="cs">Tap any term to copy it, paste into Google Maps, then use Quick Add above.</div>
+    <button id="mapbtn">&#x1F5FA; Open Google Maps</button>
+    <div id="tgrid"></div>
+  </div>
+  <div class="card">
+    <div class="ch">What to grab from each listing</div>
+    <div class="cs">4 things, 20 seconds per business:</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="background:var(--cream);padding:8px 10px;border-left:3px solid var(--gold);font-size:12px;"><b style="display:block;color:var(--navy);margin-bottom:2px;">1. Business name</b><span style="color:var(--muted);">Copy exactly as shown</span></div>
+      <div style="background:var(--cream);padding:8px 10px;border-left:3px solid var(--gold);font-size:12px;"><b style="display:block;color:var(--navy);margin-bottom:2px;">2. Phone number</b><span style="color:var(--muted);">Shown on the listing</span></div>
+      <div style="background:var(--cream);padding:8px 10px;border-left:3px solid var(--gold);font-size:12px;"><b style="display:block;color:var(--navy);margin-bottom:2px;">3. Business type</b><span style="color:var(--muted);">Medical, legal, retail...</span></div>
+      <div style="background:var(--cream);padding:8px 10px;border-left:3px solid var(--gold);font-size:12px;"><b style="display:block;color:var(--navy);margin-bottom:2px;">4. Review intel</b><span style="color:var(--muted);">Any mention of network pain?</span></div>
+    </div>
+    <div class="tip"><b>Highest priority targets:</b> No website &middot; 3-4 star reviews &middot; Reviews mentioning system problems or payment issues &middot; Owner-operated &middot; 5-20 staff</div>
+  </div>
+</div>
+
+<!-- PASTE -->
+<div class="sec" id="sec-paste">
+  <div class="card">
+    <div class="ch">Paste &amp; Parse &mdash; Bulk import</div>
+    <div class="cs">Paste business listings from Google Maps or any text. Parser extracts names and phones automatically. One business per line works best.</div>
+    <textarea id="pasteArea" placeholder="Paste anything here. Examples:
+Metro Dental Group (215) 555-0101
+Eastside Law LLC 267-555-0188
+NorthEnd Pharmacy 267.555.0234"></textarea>
+    <div style="display:flex;gap:7px;margin-top:8px;">
+      <button class="btnp" id="parseBtn">Parse &amp; Preview &#x2192;</button>
+      <button class="btns" id="parseClear">Clear</button>
+    </div>
+    <div id="parseOut"></div>
+  </div>
+</div>
+
+<!-- FULL FORM -->
+<div class="sec" id="sec-form">
+  <div class="card">
+    <div class="ch">Full Prospect Form</div>
+    <div class="fg">
+      <div class="fc"><span class="fl">Business Name *</span><input class="fi" id="fn" placeholder="Metro Dental Group"></div>
+      <div class="fc"><span class="fl">Business Type</span>
+        <select class="fsel" id="ftype">
+          <option value="">Select...</option>
+          <option>Medical/Dental</option><option>Law Firm</option><option>Real Estate</option>
+          <option>Pharmacy</option><option>Accounting</option><option>Insurance</option>
+          <option>Retail/POS</option><option>Chiro/Therapy</option><option>Construction</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fc"><span class="fl">Contact Name</span><input class="fi" id="fcontact" placeholder="Owner or manager"></div>
+      <div class="fc"><span class="fl">Phone</span><input class="fi" id="fphone" placeholder="(215) 555-0100" type="tel"></div>
+      <div class="fc"><span class="fl">Address / Neighborhood</span><input class="fi" id="faddr" placeholder="123 Main St, NE Philly"></div>
+      <div class="fc"><span class="fl">Email</span><input class="fi" id="femail" placeholder="office@business.com" type="email"></div>
+      <div class="fc"><span class="fl">How Found</span>
+        <select class="fsel" id="fsrc">
+          <option value="">Select...</option>
+          <option>Google Maps</option><option>Walk-in</option><option>Referral</option>
+          <option>LinkedIn</option><option>Nextdoor</option><option>Cold call</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fc"><span class="fl">Recommended Plan</span>
+        <select class="fsel" id="fplan">
+          <option value="">Unknown</option>
+          <option value="249">Basic $249/mo</option>
+          <option value="449">Standard $449/mo</option>
+          <option value="799">Premium $799/mo</option>
+        </select>
+      </div>
+      <div class="fc full"><span class="fl">Pain Point / Their Exact Words</span><textarea class="fta" id="fpain" placeholder="What they said about their network problems..."></textarea></div>
+      <div class="fc full"><span class="fl">Notes</span><textarea class="fta" id="fnotes" placeholder="Review intel, best time to call, who to ask for..."></textarea></div>
+    </div>
+    <div class="fbtns">
+      <button class="btns" id="formClear">Clear</button>
+      <button class="btnp" id="formAdd">Add to List &#x2192;</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIST -->
+<div class="sec" id="sec-list">
+  <div id="exbar">
+    <button class="exbtn" id="expCsvBtn">&#x2B07; EXPORT CSV</button>
+    <button class="exbtn" id="expCallBtn">&#x1F4DE; CALL SHEET</button>
+    <button class="exbtn" id="clrAllBtn" style="color:var(--red);">&#x1F5D1; CLEAR ALL</button>
+  </div>
+  <div id="ltb">
+    <input id="lsearch" placeholder="Search name, type, phone...">
+    <select id="lstat">
+      <option value="">All statuses</option>
+      <option value="cold">Cold</option>
+      <option value="contacted">Contacted</option>
+      <option value="talking">Talking</option>
+      <option value="proposal">Proposal Out</option>
+      <option value="followup">Follow-up</option>
+      <option value="closed">Client</option>
+      <option value="lost">Not Interested</option>
+    </select>
+    <select id="ltype">
+      <option value="">All types</option>
+      <option>Medical/Dental</option><option>Law Firm</option>
+      <option>Real Estate</option><option>Pharmacy</option><option>Other</option>
+    </select>
+  </div>
+  <div id="sbar">
+    <span id="sbar-lbl">Sort:</span>
+    <button class="sbtn on" data-sort="newest">Newest</button>
+    <button class="sbtn" data-sort="alpha">A-Z</button>
+    <button class="sbtn" data-sort="status">Status</button>
+    <button class="sbtn" data-sort="plan">Value</button>
+    <button class="sbtn" data-sort="fu">Follow-up</button>
+  </div>
+  <div id="plist"></div>
+</div>
+
+<!-- PIPELINE -->
+<div class="sec" id="sec-pipe">
+  <div id="pgrid"></div>
+  <div id="pclients"></div>
+</div>
+
+<!-- SCRIPT -->
+<div class="sec" id="sec-script">
+  <div class="ssh"><div><div class="ssg">Stage 1</div><div class="sst">Open - Make them comfortable</div></div><div class="stime">2 min</div></div>
+  <div class="ssb">
+    <div class="ssq">
+      <span class="qlbl">Opening line</span>
+      <div class="quote">"Thanks for taking a few minutes. Before I tell you anything about what we do, I'd love to understand your situation first - that way I can tell you honestly whether we're even a fit. Is that okay?"</div>
+      <div class="qnote">Disarms them. Positions you as consultative. Gives you permission to ask questions.</div>
+    </div>
+  </div>
+  <div class="ssh"><div><div class="ssg">Stage 2</div><div class="sst">Diagnose - Let them talk 80%</div></div><div class="stime">8-10 min</div></div>
+  <div class="ssb">
+    <div class="ssq"><span class="qlbl">Q1 - Current state</span><div class="quote">"How are you currently handling IT and network support when something goes wrong?"</div></div>
+    <div class="ssq"><span class="qlbl">Q2 - Pain probe (most important)</span><div class="quote">"Has there been a time recently where your internet or phones going down actually cost you time or money?"</div><div class="qnote">Their words become your closing language. Don't suggest the pain - let them describe it.</div></div>
+    <div class="ssq"><span class="qlbl">Q3 - Frequency</span><div class="quote">"How often does that kind of thing happen?"</div></div>
+    <div class="ssq"><span class="qlbl">Q4 - Impact</span><div class="quote">"When it goes down - what does that look like for your team? What stops working?"</div></div>
+    <div class="ssq"><span class="qlbl">Q5 - Frustration</span><div class="quote">"Is there anything about your current setup you wish was more reliable or faster to fix?"</div></div>
+  </div>
+  <div class="ssh"><div><div class="ssg">Stage 3</div><div class="sst">Position - Their pain to your solution</div></div><div class="stime">3-4 min</div></div>
+  <div class="ssb">
+    <div class="ssq"><span class="qlbl">Formula</span><div class="quote">"Based on what you just described - [their words] - what we do for businesses like yours is [solution]. That usually means [their outcome]."</div></div>
+    <div class="ssq"><span class="qlbl">The line that closes</span><div class="quote">"It sounds like what you really need is someone you can just call - one person who knows your setup and actually fixes it. That's exactly what we are."</div></div>
+  </div>
+  <div class="ssh"><div><div class="ssg">Stage 4</div><div class="sst">Close - Get a decision</div></div><div class="stime">2-3 min</div></div>
+  <div class="ssb">
+    <div class="ssq"><span class="qlbl">Soft close</span><div class="quote">"Based on what you've told me, I think the Standard plan at $449/month would be the right fit - month-to-month, no commitment. I can send a one-page agreement today. Would that work?"</div></div>
+    <div class="ssq"><span class="qlbl">Never leave without a next step</span><div class="quote">"I'll send this today - when can I follow up? Thursday work?"</div></div>
+  </div>
+  <div class="ssh"><div><div class="ssg">Objections</div><div class="sst">Tap any to expand</div></div></div>
+  <div class="ssb" style="padding:10px 12px;">
+    <div class="obrow"><div class="obq">"I need to think about it" &#x25BC;</div><div class="oba">"What specifically is on your mind? Is it the price, timing, or something else? I'd rather address it now than have you sitting with a question I could answer in 30 seconds."</div></div>
+    <div class="obrow"><div class="obq">"It's too expensive" &#x25BC;</div><div class="oba">"What does an hour of downtime cost when your team can't work? Most clients find the plan pays for itself after one avoided outage."</div></div>
+    <div class="obrow"><div class="obq">"We already have someone" &#x25BC;</div><div class="oba">"Is that person monitoring proactively, or do you call when something breaks? Most businesses don't realize they have the reactive version until something expensive happens."</div></div>
+    <div class="obrow"><div class="obq">"No budget right now" &#x25BC;</div><div class="oba">"If your internet went down tomorrow and your team couldn't work for 3 hours, what would that cost? Our Basic plan is $249/month. One bad afternoon is usually more than that."</div></div>
+    <div class="obrow"><div class="obq">"Need to talk to my partner" &#x25BC;</div><div class="oba">"When would be good for a quick three-way call? I can answer any questions - usually takes 10 minutes."</div></div>
+  </div>
+</div>
+
+<!-- QUALIFY -->
+<div class="sec" id="sec-qualify">
+  <div class="card">
+    <div class="ch">Quick Prospect Qualifier</div>
+    <div class="cs">Score a business in 30 seconds. Check off every signal that applies.</div>
+    <input class="fi" id="qbiz" placeholder="Business name (optional — pre-fills Quick Add)" style="margin-bottom:12px;">
+    <div id="qrows">
+      <div class="qrow" data-pts="3" style="background:#fff;border:1px solid var(--border);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:7px;user-select:none;">
+        <div class="qdot" style="width:20px;height:20px;border-radius:50%;border:1.5px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;">No website listed</div><div style="font-size:11px;color:var(--muted);">Behind on tech — almost certainly no IT support</div></div>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">+3</span>
+      </div>
+      <div class="qrow" data-pts="2" style="background:#fff;border:1px solid var(--border);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:7px;user-select:none;">
+        <div class="qdot" style="width:20px;height:20px;border-radius:50%;border:1.5px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;">Rating 3.0 to 4.0 stars</div><div style="font-size:11px;color:var(--muted);">Busy but not polished — operational pain likely</div></div>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">+2</span>
+      </div>
+      <div class="qrow" data-pts="3" style="background:#fff;border:1px solid var(--border);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:7px;user-select:none;">
+        <div class="qdot" style="width:20px;height:20px;border-radius:50%;border:1.5px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;">Review mentions tech or system problem</div><div style="font-size:11px;color:var(--muted);">"System was down", "couldn't process payment", "waited forever"</div></div>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">+3</span>
+      </div>
+      <div class="qrow" data-pts="1" style="background:#fff;border:1px solid var(--border);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:7px;user-select:none;">
+        <div class="qdot" style="width:20px;height:20px;border-radius:50%;border:1.5px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;">Owner responds to reviews</div><div style="font-size:11px;color:var(--muted);">Active owner — decision maker is reachable</div></div>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">+1</span>
+      </div>
+      <div class="qrow" data-pts="1" style="background:#fff;border:1px solid var(--border);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:7px;user-select:none;">
+        <div class="qdot" style="width:20px;height:20px;border-radius:50%;border:1.5px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;">5 to 25 staff estimated</div><div style="font-size:11px;color:var(--muted);">Right size — needs support, cannot afford in-house IT</div></div>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">+1</span>
+      </div>
+    </div>
+    <div id="qresult" style="border-radius:6px;padding:14px 16px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;gap:16px;margin:12px 0 10px;">
+      <div style="text-align:center;flex-shrink:0;">
+        <div id="qscore" style="font-size:38px;font-weight:700;line-height:1;color:var(--navy);">0</div>
+        <div style="font-size:10px;color:var(--muted);">/ 10</div>
+      </div>
+      <div style="flex:1;">
+        <div id="qverdict" style="font-size:14px;font-weight:700;margin-bottom:3px;color:var(--navy);">Tap signals above to score</div>
+        <div id="qaction" style="font-size:12px;color:var(--muted);">Check off what applies to this business</div>
+        <div style="margin-top:8px;background:#eee;border-radius:4px;height:5px;overflow:hidden;"><div id="qbar" style="height:5px;border-radius:4px;background:#ccc;width:0%;transition:width 0.3s,background 0.3s;"></div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btnp" id="qAddBtn" style="flex:1;">Add to Prospect List</button>
+      <button class="btns" id="qResetBtn">Reset</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+var P = JSON.parse(localStorage.getItem('nkp') || '[]');
+var NID = parseInt(localStorage.getItem('nkid') || '1');
+var SORT = 'newest';
+
+var STS = [
+  {v:'cold',l:'Cold',c:'bc'},
+  {v:'contacted',l:'Contacted',c:'bk'},
+  {v:'talking',l:'Talking',c:'bt'},
+  {v:'proposal',l:'Proposal Out',c:'bp2'},
+  {v:'followup',l:'Follow-up',c:'bf'},
+  {v:'closed',l:'Client',c:'bx'},
+  {v:'lost',l:'Not Interested',c:'bl'}
+];
+
+var TERMS = [
+  ['dental office Philadelphia','Center City / NE'],
+  ['law firm Philadelphia','Center City'],
+  ['medical office Northeast Philadelphia','NE Philly'],
+  ['real estate agency Philadelphia','All areas'],
+  ['pharmacy Philadelphia','All neighborhoods'],
+  ['chiropractic office Philadelphia','All areas'],
+  ['accounting firm Philadelphia','Center City'],
+  ['insurance agency Philadelphia','All areas'],
+  ['dental office Delaware County','Delco suburbs'],
+  ['medical office Montgomery County','Montco suburbs'],
+  ['law firm Cherry Hill NJ','South Jersey'],
+  ['real estate South Jersey','South Jersey'],
+  ['pharmacy Northeast Philadelphia','NE Philly'],
+  ['dental office South Philadelphia','South Philly'],
+  ['medical office Bucks County','Bucks County'],
+  ['chiropractic Germantown Philadelphia','Germantown']
+];
+
+function save() {
+  localStorage.setItem('nkp', JSON.stringify(P));
+  localStorage.setItem('nkid', String(NID));
+  updateStats();
+}
+
+function gst(v) {
+  for (var i = 0; i < STS.length; i++) if (STS[i].v === v) return STS[i];
+  return STS[0];
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── STATS ─────────────────────────────────────────────────
+function updateStats() {
+  var closed = 0, active = 0, mrr = 0;
+  for (var i = 0; i < P.length; i++) {
+    if (P[i].status === 'closed') { closed++; mrr += parseInt(P[i].plan) || 0; }
+    else if (P[i].status !== 'lost') active++;
+  }
+  document.getElementById('s1').textContent = P.length;
+  document.getElementById('s2').textContent = active;
+  document.getElementById('s3').textContent = closed;
+  document.getElementById('s4').textContent = '$' + mrr.toLocaleString();
+}
+
+// ── SEARCH TERMS ──────────────────────────────────────────
+function initTerms() {
+  var g = document.getElementById('tgrid');
+  var h = '';
+  for (var i = 0; i < TERMS.length; i++) {
+    h += '<div class="trow" data-idx="' + i + '">'
+       + '<div><div class="tn">' + TERMS[i][0] + '</div><div class="ta">' + TERMS[i][1] + '</div></div>'
+       + '<button class="tcbtn" data-idx="' + i + '">COPY</button>'
+       + '</div>';
+  }
+  g.innerHTML = h;
+}
+
+document.getElementById('tgrid').addEventListener('click', function(e) {
+  var btn = e.target.closest('.tcbtn');
+  var row = e.target.closest('.trow');
+  var idx = btn ? parseInt(btn.getAttribute('data-idx')) : (row ? parseInt(row.getAttribute('data-idx')) : -1);
+  if (idx < 0) return;
+  var text = TERMS[idx][0];
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(function() { fallbackCopy(text); });
+  } else { fallbackCopy(text); }
+  var allBtns = document.querySelectorAll('.tcbtn');
+  allBtns[idx].textContent = '✓';
+  allBtns[idx].style.color = '#2E7D52';
+  setTimeout(function() { allBtns[idx].textContent = 'COPY'; allBtns[idx].style.color = ''; }, 1800);
+});
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+document.getElementById('mapbtn').addEventListener('click', function() {
+  window.open('https://maps.google.com', '_blank');
+});
+
+// ── TABS ──────────────────────────────────────────────────
+document.getElementById('tabs').addEventListener('click', function(e) {
+  var btn = e.target.closest('.tab');
+  if (!btn) return;
+  var tab = btn.getAttribute('data-tab');
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('on'); });
+  document.querySelectorAll('.sec').forEach(function(s) { s.classList.remove('on'); });
+  btn.classList.add('on');
+  document.getElementById('sec-' + tab).classList.add('on');
+  if (tab === 'list') renderList();
+  if (tab === 'pipe') renderPipeline();
+});
+
+// ── QUICK ADD ─────────────────────────────────────────────
+function quickAdd() {
+  var name = document.getElementById('qn').value.trim();
+  if (!name) { document.getElementById('qn').focus(); return; }
+  P.unshift({
+    id: NID++,
+    name: name,
+    phone: document.getElementById('qp').value.trim(),
+    type: document.getElementById('qt').value,
+    plan: document.getElementById('qpl').value,
+    contact: '', email: '', address: '', source: 'Google Maps',
+    pain: '', notes: '', status: 'cold',
+    dateAdded: new Date().toLocaleDateString(),
+    followUpDate: ''
+  });
+  save();
+  document.getElementById('qn').value = '';
+  document.getElementById('qp').value = '';
+  document.getElementById('qt').selectedIndex = 0;
+  document.getElementById('qpl').selectedIndex = 0;
+  document.getElementById('qn').focus();
+  var b = document.getElementById('qa-btn');
+  b.textContent = 'SAVED'; b.style.background = '#2E7D52';
+  setTimeout(function() { b.textContent = 'ADD \u2192'; b.style.background = ''; }, 1000);
+}
+
+document.getElementById('qa-btn').addEventListener('click', quickAdd);
+document.getElementById('qn').addEventListener('keydown', function(e) { if (e.key === 'Enter') quickAdd(); });
+document.getElementById('qp').addEventListener('keydown', function(e) { if (e.key === 'Enter') quickAdd(); });
+
+// ── PASTE & PARSE ─────────────────────────────────────────
+var PARSED = [];
+
+document.getElementById('parseBtn').addEventListener('click', function() {
+  var text = document.getElementById('pasteArea').value.trim();
+  if (!text) return;
+  var lines = text.split('\n');
+  var pRe = /(\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4})/g;
+  PARSED = [];
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i].trim();
+    if (!line) continue;
+    var phones = line.match(pRe) || [];
+    var n = line.replace(pRe, '').replace(/[·•\-|,]+$/, '').replace(/phone:|tel:/gi, '').trim();
+    if (n.length > 2) PARSED.push({ name: n, phone: phones[0] || '' });
+  }
+  var out = document.getElementById('parseOut');
+  if (!PARSED.length) {
+    out.innerHTML = '<div style="color:var(--red);padding:8px 0;font-size:12px;">No businesses detected. Try one per line with name and phone.</div>';
+    return;
+  }
+  var h = '<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:8px;font-weight:700;">' + PARSED.length + ' PROSPECTS DETECTED</div>';
+  for (var j = 0; j < PARSED.length; j++) {
+    h += '<div class="prc" id="pr' + j + '">'
+       + '<div class="prn">' + esc(PARSED[j].name) + '</div>'
+       + '<div class="prp">' + (PARSED[j].phone || 'No phone detected') + '</div>'
+       + '<div style="display:flex;gap:6px;margin-top:7px;">'
+       + '<button class="btnp btnsm" data-pi="' + j + '">Add</button>'
+       + '<button class="btns btnsm" data-skip="' + j + '">Skip</button>'
+       + '</div></div>';
+  }
+  h += '<button class="btng" id="addAllBtn" style="margin-top:8px;">Add All ' + PARSED.length + ' \u2192</button>';
+  out.innerHTML = h;
+});
+
+document.getElementById('parseClear').addEventListener('click', function() {
+  document.getElementById('pasteArea').value = '';
+  document.getElementById('parseOut').innerHTML = '';
+  PARSED = [];
+});
+
+document.getElementById('parseOut').addEventListener('click', function(e) {
+  var addBtn = e.target.closest('[data-pi]');
+  var skipBtn = e.target.closest('[data-skip]');
+  var addAll = e.target.closest('#addAllBtn');
+  if (addBtn) {
+    var idx = parseInt(addBtn.getAttribute('data-pi'));
+    addParsedItem(idx);
+  } else if (skipBtn) {
+    var sidx = parseInt(skipBtn.getAttribute('data-skip'));
+    var el = document.getElementById('pr' + sidx);
+    if (el) el.style.opacity = '0.3';
+  } else if (addAll) {
+    for (var k = 0; k < PARSED.length; k++) {
+      P.unshift({ id: NID++, name: PARSED[k].name, phone: PARSED[k].phone || '',
+        type: '', plan: '', contact: '', email: '', address: '', source: 'Google Maps',
+        pain: '', notes: '', status: 'cold', dateAdded: new Date().toLocaleDateString(), followUpDate: '' });
+    }
+    save();
+    document.getElementById('parseOut').innerHTML = '<div style="color:var(--green);font-size:14px;font-weight:700;padding:8px 0;">' + PARSED.length + ' prospects added.</div>';
+    PARSED = [];
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('on'); });
+    document.querySelectorAll('.sec').forEach(function(s) { s.classList.remove('on'); });
+    document.querySelector('[data-tab="list"]').classList.add('on');
+    document.getElementById('sec-list').classList.add('on');
+    renderList();
+  }
+});
+
+function addParsedItem(idx) {
+  if (!PARSED[idx]) return;
+  P.unshift({ id: NID++, name: PARSED[idx].name, phone: PARSED[idx].phone || '',
+    type: '', plan: '', contact: '', email: '', address: '', source: 'Google Maps',
+    pain: '', notes: '', status: 'cold', dateAdded: new Date().toLocaleDateString(), followUpDate: '' });
+  save();
+  var el = document.getElementById('pr' + idx);
+  if (el) el.innerHTML = '<div style="color:var(--green);padding:4px 0;font-size:12px;">\u2713 Added: ' + esc(PARSED[idx].name) + '</div>';
+}
+
+// ── FULL FORM ─────────────────────────────────────────────
+document.getElementById('formAdd').addEventListener('click', function() {
+  var name = document.getElementById('fn').value.trim();
+  if (!name) { alert('Business name is required.'); return; }
+  P.unshift({
+    id: NID++, name: name,
+    type: document.getElementById('ftype').value,
+    contact: document.getElementById('fcontact').value.trim(),
+    phone: document.getElementById('fphone').value.trim(),
+    email: document.getElementById('femail').value.trim(),
+    address: document.getElementById('faddr').value.trim(),
+    source: document.getElementById('fsrc').value,
+    plan: document.getElementById('fplan').value,
+    pain: document.getElementById('fpain').value.trim(),
+    notes: document.getElementById('fnotes').value.trim(),
+    status: 'cold', dateAdded: new Date().toLocaleDateString(), followUpDate: ''
+  });
+  save();
+  document.getElementById('formClear').click();
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('on'); });
+  document.querySelectorAll('.sec').forEach(function(s) { s.classList.remove('on'); });
+  document.querySelector('[data-tab="list"]').classList.add('on');
+  document.getElementById('sec-list').classList.add('on');
+  renderList();
+});
+
+document.getElementById('formClear').addEventListener('click', function() {
+  ['fn','fcontact','fphone','femail','faddr','fpain','fnotes'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  ['ftype','fsrc','fplan'].forEach(function(id) {
+    document.getElementById(id).selectedIndex = 0;
+  });
+});
+
+// ── LIST CONTROLS ─────────────────────────────────────────
+document.getElementById('lsearch').addEventListener('input', renderList);
+document.getElementById('lstat').addEventListener('change', renderList);
+document.getElementById('ltype').addEventListener('change', renderList);
+
+document.getElementById('sbar').addEventListener('click', function(e) {
+  var btn = e.target.closest('.sbtn');
+  if (!btn) return;
+  SORT = btn.getAttribute('data-sort');
+  document.querySelectorAll('.sbtn').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  renderList();
+});
+
+document.getElementById('expCsvBtn').addEventListener('click', exportCSV);
+document.getElementById('expCallBtn').addEventListener('click', exportCall);
+document.getElementById('clrAllBtn').addEventListener('click', function() {
+  if (!confirm('Clear ALL prospects? Cannot be undone.')) return;
+  P = []; NID = 1; save(); renderList(); renderPipeline();
+});
+
+// ── SORT ──────────────────────────────────────────────────
+function doSort(arr) {
+  var a = arr.slice();
+  if (SORT === 'alpha') return a.sort(function(x,y) { return x.name.localeCompare(y.name); });
+  if (SORT === 'status') return a.sort(function(x,y) {
+    var xi = 0, yi = 0;
+    for (var i = 0; i < STS.length; i++) {
+      if (STS[i].v === x.status) xi = i;
+      if (STS[i].v === y.status) yi = i;
+    }
+    return xi - yi;
+  });
+  if (SORT === 'plan') return a.sort(function(x,y) { return (parseInt(y.plan)||0) - (parseInt(x.plan)||0); });
+  if (SORT === 'fu') return a.sort(function(x,y) {
+    if (!x.followUpDate) return 1;
+    if (!y.followUpDate) return -1;
+    return new Date(x.followUpDate) - new Date(y.followUpDate);
+  });
+  return a;
+}
+
+// ── RENDER LIST ───────────────────────────────────────────
+function renderList() {
+  var q = document.getElementById('lsearch').value.toLowerCase();
+  var fs = document.getElementById('lstat').value;
+  var ft = document.getElementById('ltype').value;
+  var f = P.filter(function(p) {
+    var mq = !q || p.name.toLowerCase().indexOf(q) > -1
+      || (p.phone || '').indexOf(q) > -1
+      || (p.type || '').toLowerCase().indexOf(q) > -1;
+    return mq && (!fs || p.status === fs) && (!ft || p.type === ft);
+  });
+  f = doSort(f);
+  var c = document.getElementById('plist');
+  if (!f.length) {
+    c.innerHTML = '<div class="empty">No prospects yet. Use Quick Add at the top or the Paste &amp; Parse tab.</div>';
+    return;
+  }
+  var today = new Date().toISOString().slice(0,10);
+  var h = '';
+  for (var i = 0; i < f.length; i++) {
+    var p = f[i];
+    var st = gst(p.status);
+    var pl = p.plan ? '$' + parseInt(p.plan).toLocaleString() + '/mo' : '';
+    var od = p.followUpDate && p.followUpDate < today && p.status !== 'closed' && p.status !== 'lost';
+    h += '<div class="pc"' + (od ? ' style="border-color:#B02A2A;"' : '') + ' data-id="' + p.id + '">'
+       + '<div class="pch">'
+       + '<div class="pcl">'
+       + '<div class="pcn">' + esc(p.name) + (od ? ' <span style="color:#B02A2A;font-size:10px;">DUE</span>' : '') + '</div>'
+       + '<div class="pcm">'
+       + (p.type ? '<span>' + esc(p.type) + '</span>' : '')
+       + (p.phone ? '<span>' + esc(p.phone) + '</span>' : '')
+       + (pl ? '<span style="color:var(--gold);font-weight:700;">' + pl + '</span>' : '')
+       + (p.followUpDate ? '<span>' + p.followUpDate + '</span>' : '')
+       + '</div></div>'
+       + '<div class="pcr">'
+       + '<span class="bdg ' + st.c + '">' + st.l + '</span>'
+       + (p.phone ? '<button class="pcbtn" data-call="' + p.phone.replace(/\D/g,'') + '">&#x1F4DE;</button>' : '')
+       + '<button class="pcbtn" data-del="' + p.id + '">&#x1F5D1;</button>'
+       + '</div></div>'
+       + '<div class="pcbody" id="cb' + p.id + '">'
+       + '<div class="dg">'
+       + (p.contact ? '<div><span class="dlbl">Contact</span><span class="dval">' + esc(p.contact) + '</span></div>' : '')
+       + (p.email ? '<div><span class="dlbl">Email</span><span class="dval">' + esc(p.email) + '</span></div>' : '')
+       + (p.address ? '<div><span class="dlbl">Address</span><span class="dval">' + esc(p.address) + '</span></div>' : '')
+       + (p.source ? '<div><span class="dlbl">How found</span><span class="dval">' + esc(p.source) + '</span></div>' : '')
+       + '<div><span class="dlbl">Added</span><span class="dval">' + p.dateAdded + '</span></div>'
+       + '</div>'
+       + (p.pain ? '<div class="painbox"><span class="painlbl">Their pain point</span>' + esc(p.pain) + '</div>' : '')
+       + (p.notes ? '<div class="painbox" style="border-left-color:var(--navy);margin-top:6px;"><span class="painlbl" style="color:var(--navy);">Notes</span>' + esc(p.notes) + '</div>' : '')
+       + '<div class="strow">'
+       + STS.map(function(s) {
+           return '<button class="stbtn' + (p.status === s.v ? ' on' : '') + '" data-st="' + s.v + '" data-sid="' + p.id + '">' + s.l + '</button>';
+         }).join('')
+       + '</div>'
+       + '<div class="furow"><span>Follow-up:</span>'
+       + '<input type="date" value="' + (p.followUpDate || '') + '" data-fuid="' + p.id + '">'
+       + '</div></div></div>';
+  }
+  c.innerHTML = h;
+}
+
+// ── LIST DELEGATION ───────────────────────────────────────
+document.getElementById('plist').addEventListener('click', function(e) {
+  var callBtn = e.target.closest('[data-call]');
+  var delBtn = e.target.closest('[data-del]');
+  var stBtn = e.target.closest('[data-st]');
+  var pch = e.target.closest('.pch');
+
+  if (callBtn) {
+    e.stopPropagation();
+    window.location.href = 'tel:' + callBtn.getAttribute('data-call');
+    return;
+  }
+  if (delBtn) {
+    e.stopPropagation();
+    var id = parseInt(delBtn.getAttribute('data-del'));
+    if (!confirm('Remove this prospect?')) return;
+    P = P.filter(function(p) { return p.id !== id; });
+    save(); renderList(); renderPipeline();
+    return;
+  }
+  if (stBtn) {
+    e.stopPropagation();
+    var sid = parseInt(stBtn.getAttribute('data-sid'));
+    var sv = stBtn.getAttribute('data-st');
+    for (var i = 0; i < P.length; i++) {
+      if (P[i].id === sid) { P[i].status = sv; break; }
+    }
+    save(); renderList(); renderPipeline();
+    return;
+  }
+  if (pch) {
+    var card = pch.closest('.pc');
+    var cid = card.getAttribute('data-id');
+    var body = document.getElementById('cb' + cid);
+    if (body) body.classList.toggle('on');
+  }
+});
+
+document.getElementById('plist').addEventListener('change', function(e) {
+  var fu = e.target.closest('[data-fuid]');
+  if (fu) {
+    var fid = parseInt(fu.getAttribute('data-fuid'));
+    for (var i = 0; i < P.length; i++) {
+      if (P[i].id === fid) { P[i].followUpDate = fu.value; break; }
+    }
+    save();
+  }
+});
+
+// ── PIPELINE ──────────────────────────────────────────────
+function renderPipeline() {
+  var stages = [
+    {k:'cold',l:'Cold',s:'Not contacted'},
+    {k:'contacted',l:'Contacted',s:'Awaiting response'},
+    {k:'talking',l:'Talking',s:'In conversation'},
+    {k:'proposal',l:'Proposal Out',s:'Awaiting decision'}
+  ];
+  var total = P.length || 1;
+  var h = '';
+  for (var i = 0; i < stages.length; i++) {
+    var n = 0;
+    for (var j = 0; j < P.length; j++) if (P[j].status === stages[i].k) n++;
+    h += '<div class="pcol"><div class="pcolh">' + stages[i].l + '<span class="pcoln">' + n + '</span></div>'
+       + '<div class="pcolv">' + stages[i].s + '</div>'
+       + '<div class="pbar"><div class="pbarf" style="width:' + Math.round(n/total*100) + '%"></div></div>'
+       + '</div>';
+  }
+  document.getElementById('pgrid').innerHTML = h;
+  var closed = P.filter(function(p) { return p.status === 'closed'; });
+  var mrr = 0;
+  for (var k = 0; k < closed.length; k++) mrr += parseInt(closed[k].plan) || 0;
+  var cl = document.getElementById('pclients');
+  if (closed.length) {
+    var ch = '<div class="card"><div class="ch">Active Clients &mdash; $' + mrr.toLocaleString() + '/mo MRR</div>';
+    for (var m = 0; m < closed.length; m++) {
+      ch += '<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">'
+          + '<div><div style="font-weight:700;font-size:13px;">' + esc(closed[m].name) + '</div>'
+          + '<div style="font-size:11px;color:var(--muted);">' + (closed[m].type || '') + '</div></div>'
+          + '<div style="font-size:14px;font-weight:700;color:var(--green);">$' + (parseInt(closed[m].plan)||0).toLocaleString() + '/mo</div>'
+          + '</div>';
+    }
+    cl.innerHTML = ch + '</div>';
+  } else {
+    cl.innerHTML = '<div class="empty">No closed clients yet. Your first one is close.</div>';
+  }
+}
+
+// ── EXPORTS ───────────────────────────────────────────────
+function exportCSV() {
+  var h = ['Name','Type','Contact','Phone','Email','Address','Source','Plan','Status','Follow-up','Pain','Notes','Added'];
+  var rows = [h.join(',')];
+  for (var i = 0; i < P.length; i++) {
+    var p = P[i];
+    rows.push([p.name,p.type,p.contact,p.phone,p.email,p.address,p.source,
+      p.plan ? '$'+p.plan+'/mo' : '',p.status,p.followUpDate,p.pain,p.notes,p.dateAdded]
+      .map(function(v) { return '"' + String(v||'').replace(/"/g,'""') + '"'; }).join(','));
+  }
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([rows.join('\n')], {type:'text/csv'}));
+  a.download = 'nk_prospects.csv'; a.click();
+}
+
+function exportCall() {
+  var active = P.filter(function(p) { return p.status !== 'closed' && p.status !== 'lost'; });
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Call Sheet</title>'
+    + '<style>body{font-family:Arial,sans-serif;padding:20px;font-size:12px;}'
+    + 'h2{font-size:15px;margin-bottom:14px;color:#0D1F3C;}'
+    + 'table{width:100%;border-collapse:collapse;}'
+    + 'th{background:#0D1F3C;color:white;padding:7px 9px;text-align:left;font-size:11px;}'
+    + 'td{padding:7px 9px;border-bottom:1px solid #eee;vertical-align:top;}'
+    + 'tr:nth-child(even) td{background:#f9f9f9;}</style></head><body>'
+    + '<h2>NK Tech Solutions &mdash; Call Sheet &middot; ' + new Date().toLocaleDateString() + '</h2>'
+    + '<table><thead><tr><th>#</th><th>Business</th><th>Type</th><th>Phone</th><th>Status</th><th>Notes</th><th>Result</th></tr></thead><tbody>';
+  for (var i = 0; i < active.length; i++) {
+    var p = active[i];
+    html += '<tr><td>' + (i+1) + '</td><td><b>' + esc(p.name) + '</b></td>'
+          + '<td>' + (p.type||'') + '</td><td>' + (p.phone||'') + '</td>'
+          + '<td>' + p.status + '</td><td>' + esc(p.notes||p.pain||'') + '</td>'
+          + '<td style="min-width:60px;">&nbsp;</td></tr>';
+  }
+  html += '</tbody></table></body></html>';
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([html], {type:'text/html'}));
+  a.download = 'nk_call_sheet.html'; a.click();
+}
+
+// ── OBJECTIONS ────────────────────────────────────────────
+document.getElementById('sec-script').addEventListener('click', function(e) {
+  var q = e.target.closest('.obq');
+  if (q) q.nextElementSibling.classList.toggle('on');
+});
+
+
+// ── QUALIFIER ─────────────────────────────────────────────
+var qChecked = new Set();
+
+document.getElementById('qrows').addEventListener('click', function(e) {
+  var row = e.target.closest('.qrow');
+  if (!row) return;
+  if (qChecked.has(row)) {
+    qChecked.delete(row);
+    row.style.background = '#fff';
+    row.style.borderColor = 'var(--border)';
+    var dot = row.querySelector('.qdot');
+    dot.style.background = '';
+    dot.style.borderColor = '#ccc';
+    dot.textContent = '';
+  } else {
+    qChecked.add(row);
+    row.style.background = '#EAF3DE';
+    row.style.borderColor = '#639922';
+    var dot = row.querySelector('.qdot');
+    dot.style.background = '#2E7D52';
+    dot.style.borderColor = '#2E7D52';
+    dot.textContent = '✓';
+  }
+  calcQ();
+});
+
+function calcQ() {
+  var total = 0;
+  qChecked.forEach(function(r) { total += parseInt(r.getAttribute('data-pts')); });
+  document.getElementById('qscore').textContent = total;
+  var bar = document.getElementById('qbar');
+  var verdict = document.getElementById('qverdict');
+  var action = document.getElementById('qaction');
+  var scoreEl = document.getElementById('qscore');
+  bar.style.width = Math.round(total / 10 * 100) + '%';
+  if (total === 0) {
+    verdict.textContent = 'Tap signals above to score';
+    action.textContent = 'Check off what applies to this business';
+    bar.style.background = '#ccc';
+    scoreEl.style.color = 'var(--navy)';
+  } else if (total <= 3) {
+    verdict.textContent = 'Low priority — skip for now';
+    action.textContent = 'Move on. Better prospects elsewhere.';
+    bar.style.background = '#B02A2A';
+    scoreEl.style.color = '#B02A2A';
+  } else if (total <= 5) {
+    verdict.textContent = 'Possible — worth a quick call';
+    action.textContent = 'Add to list and call when you have time.';
+    bar.style.background = '#C8962A';
+    scoreEl.style.color = '#C8962A';
+  } else if (total <= 7) {
+    verdict.textContent = 'Good prospect — call today';
+    action.textContent = 'Strong signals. Prioritize this one.';
+    bar.style.background = '#185FA5';
+    scoreEl.style.color = '#185FA5';
+  } else {
+    verdict.textContent = 'Hot lead — call immediately';
+    action.textContent = 'Multiple pain signals. This is your target.';
+    bar.style.background = '#2E7D52';
+    scoreEl.style.color = '#2E7D52';
+  }
+}
+
+document.getElementById('qAddBtn').addEventListener('click', function() {
+  var name = document.getElementById('qbiz').value.trim();
+  var total = 0;
+  var signals = [];
+  qChecked.forEach(function(r) {
+    total += parseInt(r.getAttribute('data-pts'));
+    signals.push(r.querySelector('div > div').textContent);
+  });
+  var notes = signals.length ? 'Qualifier score: ' + total + '/10. Signals: ' + signals.join(' | ') : 'Qualifier score: ' + total + '/10';
+  if (name) {
+    P.unshift({
+      id: NID++, name: name, phone: '', type: '', plan: '',
+      contact: '', email: '', address: '', source: 'Google Maps',
+      pain: '', notes: notes, status: 'cold',
+      dateAdded: new Date().toLocaleDateString(), followUpDate: ''
+    });
+    save();
+    document.getElementById('qbiz').value = '';
+    qChecked.forEach(function(r) {
+      r.style.background = '#fff';
+      r.style.borderColor = 'var(--border)';
+      var dot = r.querySelector('.qdot');
+      dot.style.background = '';
+      dot.style.borderColor = '#ccc';
+      dot.textContent = '';
+    });
+    qChecked.clear();
+    calcQ();
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('on'); });
+    document.querySelectorAll('.sec').forEach(function(s) { s.classList.remove('on'); });
+    document.querySelector('[data-tab="list"]').classList.add('on');
+    document.getElementById('sec-list').classList.add('on');
+    renderList();
+    alert(name + ' added with score ' + total + '/10');
+  } else {
+    document.getElementById('qn').value = '';
+    document.getElementById('qn').focus();
+    alert('Enter the business name in the field above, then tap Add again.');
+  }
+});
+
+document.getElementById('qResetBtn').addEventListener('click', function() {
+  qChecked.forEach(function(r) {
+    r.style.background = '#fff';
+    r.style.borderColor = 'var(--border)';
+    var dot = r.querySelector('.qdot');
+    dot.style.background = '';
+    dot.style.borderColor = '#ccc';
+    dot.textContent = '';
+  });
+  qChecked.clear();
+  document.getElementById('qbiz').value = '';
+  calcQ();
+});
+
+// ── INIT ──────────────────────────────────────────────────
+initTerms();
+updateStats();
+document.getElementById('qn').focus();
+</script>
+</body>
+</html>
